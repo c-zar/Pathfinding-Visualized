@@ -81,12 +81,12 @@ setupGraphCallbacks = function () {
     $('td').mousemove(function (event) {
         if (mousePressed && currCell != this) {
             if (startPressed && !$(this).hasClass("wall") && !$(this).hasClass("end")) { //start cell can only be moved to normal cells
-                $(currCell).toggleClass("start fa fa-car");
-                $(this).toggleClass("start fa fa-car");
+                $(currCell).toggleClass("start fas fa-car");
+                $(this).toggleClass("start fas fa-car");
                 currCell = this;
             } else if (endPressed && !$(this).hasClass("wall") && !$(this).hasClass("start")) { //end cell can only be moved to normal cells
-                $(currCell).toggleClass("end fa fa-dot-circle-o");
-                $(this).toggleClass("end fa fa-dot-circle-o");
+                $(currCell).toggleClass("end fas fa-bullseye");
+                $(this).toggleClass("end fas fa-bullseye");
                 currCell = this;
             } else if (!startPressed && !endPressed && !$(this).hasClass("end") && !$(this).hasClass("start") &&
                 !$(this).hasClass("visited") && !$(this).hasClass("path")) { //toggle cells/walls if mouse held over
@@ -124,9 +124,9 @@ setupGraph = function () {
             let cell = row.insertCell(j);
             grid[i][j] = cell;
             if (i == 1 && j == 1) {
-                cell.className = "cell start fa fa-car";
+                cell.className = "cell start fas fa-car";
             } else if (i == grid.length - 2 && j == grid[i].length - 2) {
-                cell.className = "cell end fa fa-dot-circle-o";
+                cell.className = "cell end fas fa-bullseye";
             } else {
                 cell.className = "cell";
             }
