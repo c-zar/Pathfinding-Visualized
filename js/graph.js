@@ -163,7 +163,7 @@ setupButtonCallbacks = function () {
         $('.dropdown-menu > ').removeClass('active');
         $(this).addClass('active');
         searchMode = $(this).index();
-        // $('#sort-dropdown').text(this.text);
+        $('#sort-dropdown').text(this.text);
     });
 
 }
@@ -172,33 +172,24 @@ setupButtonCallbacks = function () {
 Pathfinding algorithms
 */
 
-// breadth first search
-// unweighted, guarantees shortest path if one exists
-BFS = async function () {
-    let queue = []; //queue used to store visited nodes
-
-    //2d array holding the previous cells. used to keep track of shortest path.
-    let prev = new Array(grid.length).fill(0).map(() => new Array(grid[0].length).fill(0));
-    // console.log(prev);
-
-    queue.push($('.start'));
-    $('.start').toggleClass('cell visited'); //tracking visited cells by classname
-    let currCell; //used in the end to see if target cell was found
-    while (queue.length > 0) {
+// used in bfs to asychronously visit the nodes in the queue
+// makes animation look cooler
+async function visitQueue(queue, prev) {
+    var clone = queue.slice(0);
+    queue.splice(0, queue.length);
+    let currCell;
+    while (clone.length > 0) {
         if (cancel) //used to stop search if cancelled
             return;
+        currCell = clone.shift();   //FIFO
 
-        currCell = queue.shift(); //FIFO
-        if ($(currCell).hasClass("end")) //if target found, stop search
-            break;
+        if ($(currCell).hasClass("end")) //if target found, stop visit and return target
+            return currCell;
 
-        //cell position in graph
         let Ypos = $(currCell).parent().index();
         let Xpos = $(currCell).index();
-        // console.log($(currCell)[0]);
-        // console.log(Ypos + "," + Xpos);
 
-        //visit the neighbors in cardinal order
+        //visits neightbors in cardinal direction
         let currNeightbor;
         if (Ypos - 1 >= 0) { //  North
             if ($($('#graph')[0].rows[Ypos - 1].cells[Xpos]).hasClass("cell")) {
@@ -235,8 +226,27 @@ BFS = async function () {
                 queue.push($(currNeightbor));
             }
         }
+    }
+    return null;
+}
 
-        await sleep(1); //sleep to allow animations time to load
+// breadth first search
+// unweighted, guarantees shortest path if one exists
+BFS = async function () {
+    let queue = []; //queue used to store visited nodes
+
+    //2d array holding the previous cells. used to keep track of shortest path.
+    let prev = new Array(grid.length).fill(0).map(() => new Array(grid[0].length).fill(0));
+    // console.log(prev);
+
+    queue.push($('.start'));
+    $('.start').toggleClass('cell visited'); //tracking visited cells by classname
+    let currCell; //used in the end to see if target cell was found
+    while (queue.length > 0) {
+        currCell = await visitQueue(queue, prev);   // uses visit queue to asynchronously visit nodes
+        if($(currCell).hasClass("end"))
+            break;
+        await sleep(200);
     }
 
     // if target found, highlight the shortest path
@@ -261,13 +271,6 @@ BFS = async function () {
             await sleep(10);
         }
     }
-    // if($(currCell).hasClass("end")){
-    //     // while(!$(currCell).hasClass("start")){
-    //     //     $(currCell).toggleClass("visited path");
-    //     //     currCell = prev[$(currCell).parent().index()][$(currCell).index()]
-    //     // }
-    // }
-    // console.log(prev);
 }
 
 // Depth First Search
@@ -297,6 +300,7 @@ DFS = async function () {
         // console.log(Ypos + "," + Xpos);
 
         //visit the neighbors in cardinal order
+        //no need to asynchronously visit because only visiting one at a time;
         let currNeightbor;
         if (Ypos - 1 >= 0 && $($('#graph')[0].rows[Ypos - 1].cells[Xpos]).hasClass("cell")) { //  North
             currNeightbor = $($('#graph')[0].rows[Ypos - 1].cells[Xpos]);

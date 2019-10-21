@@ -32,13 +32,15 @@ td {
     background-color: #130b15;
     animation-name: wallAnimation;
     animation-duration: 0.5s;
+    border: none;
+
 }
 
 .visited {
     display: table-cell;
     background-color: #E1BEE7;
     animation: visitAnimation;
-    animation-duration: 3s;
+    animation-duration: 1s;
     border: 1px solid white;
 
 }
@@ -47,7 +49,7 @@ td {
     display: table-cell;
     background-color: #FFCA28;
     animation: pathAnimation;
-    animation-duration: 2s;
+    animation-duration: 0.5s;
     border: none;
 }
 
@@ -68,11 +70,12 @@ td {
         border: 1px solid rgba(0, 0, 0, .2);
         border-radius: 50%;
         background-color: #311B92;
+        ;
         transform: scale(0);
     }
 
     50% {
-        border: 1px solid rgba(0, 0, 0, .2);
+        background-color: #4527A0;
         border-radius: 50%;
     }
 
@@ -85,6 +88,7 @@ td {
 @keyframes pathAnimation {
     0% {
         background-color: #E65100;
+        transform: scale(0.8);
     }
 
     50% {
