@@ -348,6 +348,10 @@ DFS = async function () {
     }
 }
 
+async function generateMaze(){
+    
+}
+
 // Helper methods
 
 //used to pause during loops to allow animations to start at different times
